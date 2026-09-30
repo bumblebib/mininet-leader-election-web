@@ -1,0 +1,105 @@
+:root {
+  --sea: #0d2b35;          /* fundo do grafo */
+  --sea-2: #16404d;
+  --paper: #f2f5f6;        /* painel de mensagens */
+  --ink: #10242c;
+  --muted: #6b8089;
+  --line: #2f6272;
+  --leader: #f5b83d;
+  --beat: #5fd6b8;
+  --vote: #a98cff;
+  --down: #ff6161;
+  --up: #2aa38a;
+  --sans: "Space Grotesk", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { font-family: var(--sans); color: var(--ink); background: var(--paper); }
+#root { height: 100%; }
+
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 420px; height: 100%; }
+@media (max-width: 900px) { .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: auto; min-height: 100%; } }
+
+/* ---------- Lado do Grafo ---------- */
+.stage { background: radial-gradient(circle at 50% 45%, var(--sea-2), var(--sea) 70%); color: #e6f1f4;
+         display: flex; flex-direction: column; min-height: 0; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 24px 0; flex-wrap: wrap; }
+h1 { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+.badge { font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 1px solid currentColor; font-weight: 500; }
+.badge.ok { color: var(--beat); }
+.badge.wait { color: var(--leader); }
+.badge.off { color: #9db3bb; }
+.graph { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 8px 16px; }
+.graph svg { width: 100%; max-width: 640px; max-height: 100%; height: auto; overflow: visible; }
+
+.edge { stroke: var(--line); stroke-width: 1.5; }
+.ghost { fill: none; stroke: #4a6a76; stroke-width: 1.5; stroke-dasharray: 3 5; }
+.node-body { transition: transform .8s cubic-bezier(.2,.8,.2,1); }
+.node circle.core { transition: fill .4s, stroke .4s; }
+.node { cursor: pointer; }
+.node:focus-visible circle.core { stroke: #fff; stroke-width: 3; }
+.pid { font: 700 17px var(--sans); fill: #fff; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.tag { font: 500 12px var(--sans); text-anchor: middle; fill: #b9cdd3; pointer-events: none; }
+.tag.leader { fill: var(--leader); font-weight: 700; }
+.tag.dead { fill: var(--down); }
+.pulse { fill: none; stroke: var(--beat); stroke-width: 2; transform-box: fill-box; transform-origin: center;
+         animation: pulse .9s ease-out forwards; pointer-events: none; }
+@keyframes pulse { from { transform: scale(1); opacity: .9; } to { transform: scale(1.9); opacity: 0; } }
+.crown-ring { fill: none; stroke: var(--leader); stroke-width: 3; }
+.selected-ring { fill: none; stroke: #fff; stroke-width: 1.5; stroke-dasharray: 4 4; }
+
+.legend { display: flex; gap: 16px; flex-wrap: wrap; padding: 0 24px 10px; font-size: 12px; color: #a9c0c7; }
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: baseline; }
+
+.controls { padding: 12px 24px 20px; border-top: 1px solid #23505e; background: rgba(6,24,30,.45); }
+.controls h2 { margin: 0 0 8px; font-size: 14px; font-weight: 500; color: #c6d8dd; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+button { font: 500 13px var(--sans); color: #e6f1f4; background: #1c4a59; border: 1px solid #2f6272; padding: 8px 12px;
+         border-radius: 8px; cursor: pointer; }
+button:hover:not(:disabled) { background: #245c6e; }
+button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+button:disabled { opacity: .35; cursor: not-allowed; }
+button.danger { border-color: #8a3d3d; background: #4a2429; }
+button.danger:hover:not(:disabled) { background: #63303a; }
+.note { font-size: 12px; color: #f5b83d; margin-top: 8px; }
+
+/* ---------- Inspeção no SO / Rede ---------- */
+.node-inspector { margin-top: 12px; padding: 10px 14px; background: rgba(10, 36, 44, 0.6);
+                  border: 1px solid #23505e; border-radius: 8px; font-size: 12px; }
+.inspector-title { font-size: 11px; font-weight: 700; color: #a9c0c7; margin-bottom: 6px;
+                   text-transform: uppercase; letter-spacing: 0.05em; }
+.inspector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 6px 16px; }
+.inspector-item { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.inspector-item .label { color: #8da4ac; }
+.inspector-item .val { font-family: var(--mono); font-weight: 500; }
+.st-ok { color: var(--beat); }
+.st-warn { color: var(--leader); }
+.st-err { color: var(--down); }
+
+/* ---------- Lado das Mensagens ---------- */
+.feed { display: flex; flex-direction: column; min-height: 0; border-left: 1px solid #d6dfe2; background: var(--paper); }
+.feed header { padding: 18px 20px 10px; }
+.feed h2 { margin: 0 0 8px; font-size: 16px; font-weight: 700; }
+.filters { display: flex; gap: 12px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.filters label { display: flex; gap: 5px; align-items: center; cursor: pointer; }
+.rows { flex: 1; overflow-y: auto; margin: 0; padding: 0 0 16px; list-style: none; min-height: 260px; }
+.row { display: grid; grid-template-columns: 62px 1fr; gap: 8px; padding: 6px 20px; font: 400 12.5px/1.45 var(--mono);
+       border-left: 4px solid transparent; }
+.row time { color: var(--muted); }
+.row.hb { color: #8aa0a8; }
+.row.msg { color: #37505a; }
+.row.vote { border-left-color: var(--vote); background: #ece8fb; font-weight: 500; }
+.row.leader { border-left-color: var(--leader); background: #fdf1d3; font-weight: 500; }
+.row.down { border-left-color: var(--down); background: #fde3e3; font-weight: 500; color: #7b1d1d; }
+.row.crash { border-left-color: var(--leader); background: #fff8e6; font-weight: 500; color: #7a5000; }
+.row.killed { border-left-color: #a83232; background: #fbe4e4; font-weight: 500; color: #6e1313; }
+.row.up { border-left-color: var(--up); background: #dcf3ee; }
+.empty { padding: 24px 20px; color: var(--muted); font-size: 14px; }
+.banner { background: #fde3e3; color: #7b1d1d; padding: 8px 20px; font-size: 13px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse { animation: none; opacity: 0; }
+  .node-body { transition: none; }
+}
