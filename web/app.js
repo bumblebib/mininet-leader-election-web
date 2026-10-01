@@ -103,7 +103,7 @@ function App() {
     <div className="app">
       <section className="stage">
         <div className="top">
-          <h1>Eleição de líder — Valentão (menor ID vence)</h1>
+          <h1>Eleição de líder — Fracão (menor ID vence)</h1>
           <span className={`badge ${badge.cls}`} aria-live="polite">{badge.text}</span>
         </div>
         <div className="graph">
